@@ -19,5 +19,24 @@ button {
 }
 
 .error {
-  color: red;
+  color: black;
+  background-color: red;
+  width: 40%;
+  margin-bottom: -1rem;
+}
+
+.userWrapper {
+  display: flex;
+  flex-flow: wrap row;
+  justify-content: center;
+}
+
+.user {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid black;
+  margin: 1rem 0 0 1rem;
+  height: 10rem;
+  width: 20%;
 }

@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { withFormik, Form, Field} from 'formik'
 import * as yup from 'yup'
 import axios from 'axios'
 
-const UserForm = ({ errors, touched, status }) => {
-    const [users, setUsers] = useState([])
-
+const UserForm = ({ users, setUsers, errors, touched, status }) => {
+    console.log(status)
     useEffect(() => {
         if(status) {
             setUsers([ ...users, status ])
@@ -39,7 +38,7 @@ export default withFormik({
             user: values.user || '',
             email: values.email || '',
             password: values.password || '',
-            termsOfService: values.termsOfService || ''
+            termsOfService: values.termsOfService || false
         }
     },
     validationSchema: yup.object().shape({
@@ -48,11 +47,12 @@ export default withFormik({
         password: yup.string().min(8, 'password must be at least 8 characters').required(),
         termsOfService: yup.boolean().required()
     }),
-    handleSubmit: (values, { setStatus }) => {
+    handleSubmit: (values, { setStatus, resetForm }) => {
         axios.post('https://reqres.in/api/users', values)
             .then(res => {
-                console.log(res.data)
-                return setStatus(res.data)
+                resetForm()
+                setStatus(res.data)
+                // return resetForm()
             })
             .catch(err => {
                 return err.response
