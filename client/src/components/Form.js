@@ -3,8 +3,9 @@ import { withFormik, Form, Field} from 'formik'
 import * as yup from 'yup'
 import axios from 'axios'
 
-const UserForm = ({ users, setUsers, errors, touched, status }) => {
-    console.log(status)
+const UserForm = (props) => {
+    const { users, setUsers, errors, touched, status, values } = props
+    console.log(props)
     useEffect(() => {
         if(status) {
             setUsers([ ...users, status ])
@@ -24,7 +25,7 @@ const UserForm = ({ users, setUsers, errors, touched, status }) => {
 
             {touched.termsOfService && errors.termsOfService && <p className='error'>{errors.termsOfService}</p>}
             <label>
-                <Field type='checkbox' name='termsOfService' />
+                <Field type='checkbox' name='termsOfService' checked={values.termsOfService} />
                 <span>Terms of Service</span>
             </label>
             <button type='submit'>Submit</button>
@@ -47,12 +48,11 @@ export default withFormik({
         password: yup.string().min(8, 'password must be at least 8 characters').required(),
         termsOfService: yup.boolean().required()
     }),
-    handleSubmit: (values, { setStatus, resetForm }) => {
+    handleSubmit: (values, { setStatus, resetForm, setValues }) => {
         axios.post('https://reqres.in/api/users', values)
             .then(res => {
                 resetForm()
-                setStatus(res.data)
-                // return resetForm()
+                return setStatus(res.data)
             })
             .catch(err => {
                 return err.response
